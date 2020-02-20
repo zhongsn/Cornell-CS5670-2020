@@ -1,11 +1,7 @@
-import sys
-# sys.path.append('/Users/kb/bin/opencv-3.1.0/build/lib/')
-
 import tkinter as tk
-from tkinter import *
-from tkinter import filedialog as tkFileDialog
-from tkinter import messagebox as tkMessageBox
-from tkinter import ttk
+import tkinter.filedialog as tkFileDialog
+import tkinter.messagebox as tkMessageBox
+import tkinter.ttk as ttk
 import os
 import math
 import json
@@ -39,8 +35,7 @@ descriptorClasses = [('MOPS', features.MOPSFeatureDescriptor),
 
 # The list of feature matching algorithms to be presented to the user
 matcherClasses = [('Ratio Test', features.RatioFeatureMatcher),
-                  ('SSD', features.SSDFeatureMatcher),
-                  ('ORB', features.ORBFeatureMatcher)]
+                  ('SSD', features.SSDFeatureMatcher)]
 
 # Supported filetypes
 supportedFiletypes = [('JPEG Image', '*.jpg'), ('PNG Image', '*.png'),
@@ -200,22 +195,22 @@ class BaseFrame(tk.Frame):
         self.keypointLabel = tk.Label(self, text='Keypoint Type:')
         self.keypointTypeVar = tk.StringVar(self)
         self.keypointTypeVar.set(keypointClasses[0][0])
-        self.keypointOptions = tk.OptionMenu(*(self,
-            self.keypointTypeVar) + tuple(x[0] for x in keypointClasses))
+        self.keypointOptions = tk.OptionMenu(*((self, self.keypointTypeVar)\
+         + tuple(x[0] for x in keypointClasses)))
         self.keypointOptions.configure(width=BUTTON_WIDTH)
 
         self.descriptorLabel = tk.Label(self, text='Descriptor Type:')
         self.descriptorTypeVar = tk.StringVar(self)
         self.descriptorTypeVar.set(descriptorClasses[0][0])
-        self.descriptorOptions = tk.OptionMenu(*(self,
-            self.descriptorTypeVar) + tuple(x[0] for x in descriptorClasses))
+        self.descriptorOptions = tk.OptionMenu(*((self, self.descriptorTypeVar)\
+         + tuple(x[0] for x in descriptorClasses)))
         self.descriptorOptions.configure(width=BUTTON_WIDTH)
 
         self.matcherLabel = tk.Label(self, text='Matcher Type:')
         self.matcherTypeVar = tk.StringVar(self)
         self.matcherTypeVar.set(matcherClasses[0][0])
-        self.matcherOptions = tk.OptionMenu(*(self, self.matcherTypeVar) +
-            tuple(x[0] for x in matcherClasses))
+        self.matcherOptions = tk.OptionMenu(*((self, self.matcherTypeVar) +
+            tuple(x[0] for x in matcherClasses)))
         self.matcherOptions.configure(width=BUTTON_WIDTH)
 
         self.imageCanvas = ImageWidget(self)
@@ -312,11 +307,9 @@ class KeypointDetectionFrame(BaseFrame):
             # img = cv2.drawKeypoints(self.image, kps,
             #     flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS,
             #     color=GREEN)
-
             img = self.image.copy()
-            cv2.drawKeypoints(self.image, kps, img, 
-                flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS,
-                color=GREEN)
+            for marker in kps:
+                img = cv2.drawMarker(img, tuple(int(i) for i in marker.pt), color=GREEN)
             self.imageCanvas.drawCVImage(img)
             self.setStatus('Found ' + str(len(kps)) +
                 ' keypoints')
